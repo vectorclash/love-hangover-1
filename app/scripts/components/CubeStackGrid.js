@@ -40,7 +40,7 @@ export default class CubeStackGrid {
 
   update() {
     if(window.byteArray) {
-      let colorOffset = 180
+      let colorOffset = 150
 
       for (var i = 0; i < this.cubeStacks.length; i++) {
         let num = Math.round(window.byteArray[i] * 0.07)

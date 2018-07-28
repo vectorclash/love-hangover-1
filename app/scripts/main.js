@@ -86,7 +86,13 @@ function loop() {
     popperParticlesTwo.particleSystem.scale.z = soundScaleTwo
   }
 
-  popperParticlesOne.particleSystem.rotation.y -= 0.002
+  if(popperParticlesOne) {
+    popperParticlesOne.particleSystem.rotation.y -= 0.002
+  }
+
+  if(popperParticlesTwo) {
+    popperParticlesTwo.particleSystem.rotation.y += 0.002
+  }
 
   cubeStackGrid.update()
 }
