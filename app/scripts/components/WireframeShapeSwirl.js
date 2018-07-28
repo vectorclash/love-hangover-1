@@ -7,7 +7,7 @@ export default class WireframeShapeSwirl {
     this.rY = 0
     this.rZ = 0
 
-    this.geometry = new THREE.IcosahedronGeometry(1)
+    this.geometry = new THREE.IcosahedronGeometry(1000)
     this.container = new THREE.Object3D()
 
     let color = 200
@@ -18,7 +18,8 @@ export default class WireframeShapeSwirl {
         wireframe : true,
         color : tinycolor({h : color, s : 100, l : 50}).toHexString(),
         transparent: true,
-        opacity: 0.5
+        opacity: 0.3,
+        fog: false
       })
 
       color += colorIncrease
@@ -27,7 +28,7 @@ export default class WireframeShapeSwirl {
       }
 
       let mesh = new THREE.Mesh(this.geometry, this.material)
-      let newScale = 1 + (i * 1.01)
+      let newScale = 1 + (i * 0.8)
       mesh.scale.set(newScale, newScale, newScale)
       let newRotation = i * 0.08
       mesh.rotation.set(newRotation, newRotation, newRotation)

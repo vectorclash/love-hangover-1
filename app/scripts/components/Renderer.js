@@ -26,7 +26,7 @@ export default class Renderer {
 
     // create the scene
     this.scene = new THREE.Scene()
-    // this.scene.fog = new THREE.Fog(color, 1, 5000)
+    this.scene.fog = new THREE.Fog(color, 1, 1000)
 
     // create some lights
     this.ambientLight = new THREE.AmbientLight(0xfafafa, 0.2)

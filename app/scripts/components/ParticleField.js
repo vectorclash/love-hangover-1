@@ -15,9 +15,9 @@ export default class ParticleField {
     })
 
     for (let p = 0; p < this.particleCount; p++) {
-      let pX = Math.random() * 1024 - 512,
-          pY = Math.random() * 1024 - 512,
-          pZ = Math.random() * 1024 - 512,
+      let pX = Math.random() * 512 - 256,
+          pY = Math.random() * 512 - 256,
+          pZ = Math.random() * 512 - 256,
           particle = new THREE.Vector3(pX, pY, pZ)
 
       this.particles.vertices.push(particle)

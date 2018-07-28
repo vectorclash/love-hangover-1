@@ -1,20 +1,25 @@
 // external imports
 import * as THREE from 'three'
 import TweenMax from 'gsap'
+import tinycolor from 'tinycolor2'
 
 // custom component imports
 import Renderer from './components/Renderer'
 import SoundReactivityController from './components/SoundReactivityController'
-import CubeStack from './components/CubeStack'
+import CubeStackGrid from './components/CubeStackGrid'
+import WireframeShapeSwirl from './components/WireframeShapeSwirl'
+import ParticleField from './components/ParticleField'
 
 let renderer
 let scene, camera
 let mainContainer
 let clock = new THREE.Clock()
 let deformationRange = 0.00001
+let fftSize = 256
+let cubeStackGrid, shapeSwirl, randomShapes, popperParticlesOne, popperParticlesTwo
 
 function init() {
-  renderer = new Renderer(0xCCFF00)
+  renderer = new Renderer(0x000000)
   document.body.appendChild(renderer.rendererElement)
 
   scene = renderer.scene
@@ -23,11 +28,31 @@ function init() {
   mainContainer = new THREE.Object3D()
   scene.add(mainContainer)
 
-  let cubeStack = new CubeStack(10, 1)
-  cubeStack.update(10)
-  mainContainer.add(cubeStack.container)
+  let soundReactivityController = new SoundReactivityController(fftSize)
 
-  let soundReactivityController = new SoundReactivityController(128)
+  cubeStackGrid = new CubeStackGrid(fftSize / 2, 20, 40)
+  mainContainer.add(cubeStackGrid.container)
+
+  shapeSwirl = new WireframeShapeSwirl(10)
+  mainContainer.add(shapeSwirl.container)
+
+  let imageLoaderOne = new THREE.TextureLoader()
+  imageLoaderOne.load(
+    'images/poppers-one.png',
+    (texture) => {
+      popperParticlesOne = new ParticleField(50, texture, 50, 0.5)
+      mainContainer.add(popperParticlesOne.particleSystem)
+    }
+  )
+
+  let imageLoaderTwo = new THREE.TextureLoader()
+  imageLoaderTwo.load(
+    'images/poppers-two.png',
+    (texture) => {
+      popperParticlesTwo = new ParticleField(50, texture, 50, 0.5)
+      mainContainer.add(popperParticlesTwo.particleSystem)
+    }
+  )
 
   TweenMax.ticker.addEventListener('tick', loop)
 }
@@ -45,13 +70,25 @@ function loop() {
 
   if(window.total) {
     soundTotal = window.total * 0.000001
-    soundScaleOne = 0.7 + window.total * 0.00001
-    soundScaleTwo = 0.6 + window.total * 0.00005
+    soundScaleOne = 0.9 + window.total * 0.00001
+    soundScaleTwo = 0.9 + window.total * 0.00001
+
+    cubeStackGrid.container.scale.x = soundScaleOne
+    cubeStackGrid.container.scale.y = soundScaleOne
+    cubeStackGrid.container.scale.z = soundScaleOne
+
+    popperParticlesOne.particleSystem.scale.x = soundScaleTwo
+    popperParticlesOne.particleSystem.scale.y = soundScaleTwo
+    popperParticlesOne.particleSystem.scale.z = soundScaleTwo
+
+    popperParticlesTwo.particleSystem.scale.x = soundScaleTwo
+    popperParticlesTwo.particleSystem.scale.y = soundScaleTwo
+    popperParticlesTwo.particleSystem.scale.z = soundScaleTwo
   }
 
-  mainContainer.rotation.x += 0.002
-  mainContainer.rotation.y += 0.002
-  mainContainer.rotation.z += 0.002
+  popperParticlesOne.particleSystem.rotation.y -= 0.002
+
+  cubeStackGrid.update()
 }
 
 window.addEventListener('load', init)
